@@ -1,0 +1,158 @@
+;----------------------------------------------------------------------
+; M-Audio BridgeCoFW (64-bit)
+; Copyright (c) 2009 M-Audio / Avid Technology, Inc.
+;----------------------------------------------------------------------
+
+;==============================================================================
+[Version]
+Signature="$WINDOWS NT$"
+Class=MEDIA
+ClassGUID={4d36e96c-e325-11ce-bfc1-08002be10318}
+provider=%Mfg_Name%
+DriverVer =03/03/2008,5.10.00.5058
+CatalogFile=MAudioFW_x64.cat
+
+;------------------------------------------------------------------------------
+; Contents
+;------------------------------------------------------------------------------
+[SourceDisksNames]
+1=%Disk_Name%,,,
+
+[SourceDisksFiles]
+mafw.sys=1
+fw410.bcd=1
+fwap.bcd=1
+fw1814.bcd=1
+fwsolo.bcd=1
+ozonic.bcd=1
+nrv10.bcd=1
+projectMix.bcd=1
+fwadat.bcd=1
+
+[DestinationDirs]
+MAFW.CopyList=12
+
+[MAFW.CopyList]
+mafw.sys
+fw410.bcd
+fwap.bcd
+fw1814.bcd
+fwsolo.bcd
+ozonic.bcd
+nrv10.bcd
+projectMix.bcd
+fwadat.bcd
+
+;------------------------------------------------------------------------------
+; Manufacturer and Models
+;------------------------------------------------------------------------------
+[Manufacturer]
+%Mfg_Name%=MAFW,NTAMD64
+
+;------------------------------------------------------------------------------
+; 64-bit Model Section
+;------------------------------------------------------------------------------
+[MAFW.NTAMD64]
+%MAFWBL.DeviceDesc% = MAFW_Install,1394\M-AUDIO&FW_Bootloader
+%MAFWBL.DeviceDesc% = MAFW_Install,1394\M-AUDIO&FW_Delta_1814_Bootloader
+%MAFWBL.DeviceDesc% = MAFW_Install,1394\M-AUDIO&FW_1814_Bootloader
+%MAFWBL.DeviceDesc% = MAFW_Install,1394\M-AUDIO&FW_Audiophile_Bootloader
+%MAFWBL.DeviceDesc% = MAFW_Install,1394\M-Audio&FWSolo_Bootloader
+%MAFWBL.DeviceDesc% = MAFW_Install,1394\M-Audio&FW_Solo_Bootloader
+%MAFWBL.DeviceDesc% = MAFW_Install,1394\M-Audio&NRV-10_Bootloader
+%MAFW410.DeviceDesc% = MAFW_Install,1394\M-AUDIO&FW_410
+%MAFWAP.DeviceDesc% = MAFW_Install,1394\M-AUDIO&FW_Audiophile
+%MAFW1814.DeviceDesc% = MAFW_Install,1394\M-AUDIO&FW_Delta_1814
+%MAFW1814.DeviceDesc% = MAFW_Install,1394\M-AUDIO&FW_1814
+%MAFWPM.DeviceDesc% = MAFW_Install,1394\M-AUDIO&FW1212cs
+%MAFWPM.DeviceDesc% = MAFW_Install,1394\M-Audio&FW_1212cs
+%MAFWPM.DeviceDesc% = MAFW_Install,1394\M-Audio&ProjectMix
+%MAFWOZ.DeviceDesc% = MAFW_Install,1394\M-Audio&Ozonic
+%MAFWSO.DeviceDesc% = MAFW_Install,1394\M-Audio&FWSolo
+%MAFWSO.DeviceDesc% = MAFW_Install,1394\M-Audio&FW_Solo
+%MAFWSO.DeviceDesc% = MAFW_Install,AVC\M-Audio&FWSolo&TYP_C&ID_0
+%MAFWSO.DeviceDesc% = MAFW_Install,AVC\M-Audio&FW_Solo&TYP_C&ID_0
+%MAFWNRV.DeviceDesc% = MAFW_Install,1394\M-Audio&NRV-10
+%MAFWPF.DeviceDesc% = MAFW_Install,1394\M-Audio&ProFire_Lightbridge
+%MAFWFU.DeviceDesc% = MAFW_Install,V1394\M_AUDIO_FIRMWARE_UPDATER
+
+[MAFW_Install.NTAMD64]
+Include=ks.inf,wdmaudio.inf
+Needs=KS.Registration,WDMAUDIO.Registration
+CopyFiles=MAFW.CopyList
+AddReg=MAFW.AddReg
+
+[MAFW_Install.NTAMD64.Services]
+AddService = MAFW, 0x00000002, MAFW.AddService
+
+[MAFW_Install.NTAMD64.Interfaces]
+AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_TOPOLOGY%,MAFW.Interface.Topology
+
+;------------------------------------------------------------------------------
+; Common
+;------------------------------------------------------------------------------
+[MAFW.AddReg]
+HKR,,AssociatedFilters,,"wdmaud,swmidi,redbook"
+HKR,,Driver,,mafw.sys
+HKR,,NTMPDriver,,"mafw.sys,sbemul.sys"
+
+HKR,Drivers,SubClasses,,"wave,midi,mixer"
+
+HKR,Drivers\wave\wdmaud.drv,Driver,,wdmaud.drv
+HKR,Drivers\midi\wdmaud.drv,Driver,,wdmaud.drv
+HKR,Drivers\mixer\wdmaud.drv,Driver,,wdmaud.drv
+
+HKR,Drivers\wave\wdmaud.drv,Description,,%MAFW.DeviceDesc%
+HKR,Drivers\midi\wdmaud.drv, Description,,%MAFW.DeviceDesc%
+HKR,Drivers\mixer\wdmaud.drv,Description,,%MAFW.DeviceDesc%
+
+;; Branding
+HKR,Branding,icon,,"mafw.sys,114"
+HKR,Branding,bitmap,,"mafw.sys,115"
+HKR,Branding,url,,"http://www.m-audio.com/"
+
+;; SwSynth
+HKLM,SYSTEM\CurrentControlSet\Services\swmidi,"Start",0x00010021,3
+
+;------------------------------------------------------------------------------
+[MAFW.AddService]
+DisplayName   = %MAFW_SvcDesc%
+ServiceType   = 1                  ; SERVICE_KERNEL_DRIVER
+StartType     = 3                  ; SERVICE_DEMAND_START
+ErrorControl  = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary = %12%\mafw.sys
+
+[MAFW.Interface.Topology]
+AddReg=MAFW.AddReg.Topo
+
+[MAFW.AddReg.Topo]
+HKR,,CLSID,,%Proxy_CLSID%
+HKR,,FriendlyName,,%MAFW_Topology_Name%
+
+
+;==============================================================================
+[Strings]
+;==============================================================================
+
+Mfg_Name			="M-Audio"
+
+Disk_Name			="M-Audio FireWire Driver Disk"
+
+MAFW.DeviceDesc    	="M-Audio FW Audio"
+MAFWBL.DeviceDesc	="M-Audio FW Bootloader"
+MAFW410.DeviceDesc	="M-Audio FW 410"
+MAFWAP.DeviceDesc	="M-Audio FW Audiophile"
+MAFW1814.DeviceDesc	="M-Audio FW 1814"
+MAFWPM.DeviceDesc	="M-Audio ProjectMix"
+MAFWOZ.DeviceDesc	="M-Audio Ozonic"
+MAFWSO.DeviceDesc	="M-Audio FW Solo"
+MAFWNRV.DeviceDesc	="M-Audio NRV-10"
+MAFWPF.DeviceDesc	="M-Audio ProFire Lightbridge"
+
+MAFW_Topology_Name	="M-Audio FW Mixer"
+KSNAME_TOPOLOGY		="{456dc899-44b5-4220-9c43-87697c5a097c}"
+KSCATEGORY_TOPOLOGY	="{DDA54A40-1E4C-11D1-A050-405705C10000}"
+Proxy_CLSID			="{17CCA71B-ECD7-11D0-B908-00A0C9223196}"
+
+MAFW_SvcDesc		="Service for M-Audio FireWire"
+

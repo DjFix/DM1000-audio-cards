@@ -1,0 +1,61 @@
+;----------------------------------------------------------------------
+; M-Audio BridgeCoFW (32-bit)
+; Copyright (c) 2009 M-Audio / Avid Technology, Inc.
+;----------------------------------------------------------------------
+
+;==============================================================================
+[Version]
+Signature="$Windows NT$"
+Provider=%Mfg_Name%
+DriverVer=03/03/2008,1.1.0.0
+CatalogFile=MAudioFWNull_x64.cat
+
+; we use a private setup device class
+Class=MAudioNullDriver
+ClassGUID={9C0AE968-BB15-441c-B351-02677DC098F3}
+
+;----------------------------------------------------------------------
+; Class Install sections
+;------------------------------------------------------------------------------
+[ClassInstall32] 
+AddReg=_AddReg_ClassInstall
+
+[_AddReg_ClassInstall]
+HKR,,,,"%DeviceClassDisplayName%"
+HKR,,Icon,,"-19"
+
+;----------------------------------------------------------------------
+; Manufacturer
+;------------------------------------------------------------------------------
+[Manufacturer]
+%Mfg_Name%=MAFW_NULL,NTAMD64
+
+;----------------------------------------------------------------------
+; Device section
+;------------------------------------------------------------------------------
+[MAFW_NULL.NTAMD64]
+%DeviceDesc%=_Install, AVC\M-Audio&Ozonic&TYP_1&ID_0
+%DeviceDesc%=_Install, AVC\M-Audio&FWSolo&TYP_1&ID_0
+%DeviceDesc%=_Install, AVC\M-Audio&FW_Solo&TYP_1&ID_0
+%DeviceDesc%=_Install, AVC\M-Audio&FW410&TYP_1&ID_0
+
+;----------------------------------------------------------------------
+; Install Sections
+;------------------------------------------------------------------------------
+[_Install]
+
+[_Install.Services]
+AddService = , 0x00000002
+
+;----------------------------------------------------------------------
+; Text Strings
+;------------------------------------------------------------------------------
+[Strings]
+
+Mfg_Name="M-Audio"
+
+; device class display name, shown in Device Manager
+DeviceClassDisplayName="M-Audio Null Driver"
+
+DeviceDesc="M-Audio AVC driver"
+

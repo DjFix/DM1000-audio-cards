@@ -1,0 +1,225 @@
+;$$$DICoInst$$$  ; This tag is needed to trigger the device class co-installer.
+;/*=============================================================================
+;   FILE:         aureonAVS.inf
+;-------------------------------------------------------------------------------
+;   DESCRIPTION:  Device setup information file for 
+;         - Aureon 7.1 FireWire
+;   PLATFORMS:
+;		  - Windows XP
+;         - Windows XP x64 Edition
+;		  - Windows Vista
+;
+;   History:
+;   21-Nov-2003 (C.L.) - Initial version
+;	14-Jul-2006 (C.L.) - Migration to Win64
+;	26-Feb-2007 (C.L.) - Migration to Windows Vista
+;
+;-------------------------------------------------------------------------------
+;   COPYRIGHT:    (c) 2004-2007  TerraTec Electronic GmbH. All Rights Reserved.
+;                 (c) 2004-2007  Thesycon GmbH / BridgeCo AG
+;=============================================================================*/
+
+[Version]
+signature="$Windows NT$"
+Class=MEDIA
+ClassGUID={4d36e96c-e325-11ce-bfc1-08002be10318}
+Provider=%S_Provider%
+DriverVer=07/05/2007,2.44.0.0
+CatalogFile = aureonAVS.cat
+
+[ControlFlags]
+;ExcludeFromSelect=*
+
+[Manufacturer]
+%S_Provider%=TerraTec, ntamd64
+
+
+;=============================================================================
+; Models sections x86-based systems
+;=============================================================================
+[TerraTec]
+;child PDO
+%S_tt_avs_audio_device%=_tt_avs,TT1394_ENUM\TT1394_AVS_000AAC0200
+
+;=============================================================================
+; Models sections x64-based systems
+;=============================================================================
+[TerraTec.ntamd64]
+%S_tt_avs_audio_device%=_tt_avs,TT1394_ENUM\TT1394_AVS_000AAC0200
+
+
+;=============================================================================
+; Install Sections x86-based systems
+;=============================================================================
+[_tt_avs.NTx86]
+Include=ks.inf, wdmaudio.inf
+Needs=KS.Registration, WDMAUDIO.Registration
+CopyFiles=_CopyFiles_sys,Audio3D.CopyList,sensaura.CopyList
+DelFiles=Audio3D.DelList
+AddReg=_tt_avs.AddReg, SensauraConfiguration.AddReg, Audio3D.AddReg
+
+[_tt_avs.NTx86.HW]
+AddReg=Sensaura.AddReg
+
+;=============================================================================
+; Install Sections x64-based systems
+;=============================================================================
+[_tt_avs.ntamd64]
+Include=ks.inf, wdmaudio.inf
+Needs=KS.Registration, WDMAUDIO.Registration
+CopyFiles=_CopyFiles_sys_x64
+AddReg=_tt_avs.AddReg
+
+
+
+;=============================================================================
+;	Service Section x86
+;=============================================================================
+[_tt_avs.NTx86.Services]
+AddService = %S_DriverName%, 0x00000002, _NT_AddService, _NT_EventLog
+AddService = TTAuFWsa, 0x00000000, Sensaura_Service_Inst
+
+
+;=============================================================================
+;	Service Section x64
+;=============================================================================
+[_tt_avs.ntamd64.Services]
+AddService = %S_DriverName%, 0x00000002, _NT_AddService, _NT_EventLog
+
+; NT Service & event log
+[_NT_AddService]
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 3                  ; SERVICE_DEMAND_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %10%\System32\Drivers\%S_DriverName%.sys
+
+[Sensaura_Service_Inst]
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 3                  ; SERVICE_SYSTEM_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %10%\system32\drivers\TTAuFWsa.sys
+
+[_NT_EventLog]
+AddReg=_NT_EventLog_AddReg
+
+[_NT_EventLog_AddReg]
+HKR,,EventMessageFile,0x00020000,"%%SystemRoot%%\System32\IoLogMsg.dll;%%SystemRoot%%\System32\drivers\%S_DriverName%.sys"
+HKR,,TypesSupported,  0x00010001,7
+
+;=============================================================================
+;	Files
+;=============================================================================
+
+[_CopyFiles_sys]
+TTAuFWav.sys
+TTAuFWsa.sys
+
+[sensaura.CopyList]
+crlds3d.dll
+
+[Audio3D.CopyList]
+a3d.dll,Audio3D.dll,,4
+Audio3D.dll
+
+[Audio3D.DelList]
+a3d.dll
+Audio3D.dll
+
+[_CopyFiles_sys_x64]
+TTAuFWav.sys,TTAuFWav_x64.sys,
+
+[DestinationDirs]
+sensaura.CopyList=   10,system
+Audio3D.CopyList=    11
+_CopyFiles_sys =     12
+_CopyFiles_sys_x64 = 12
+DefaultDestDir=      12
+
+
+
+[SourceDisksNames]
+1=%S_DiskName%,,
+
+[SourceDisksFiles]
+TTAuFWav.sys=1
+TTAuFWsa.sys=1
+TTAuFWav_x64.sys=1
+crlds3d.dll=1
+Audio3D.dll=1
+a3d.dll=1
+
+;=============================================================================
+;	the interfaces of the driver
+;=============================================================================
+[_tt_avs.NTx86.Interfaces]
+AddInterface=%KSCATEGORY_AUDIO%,%KSNAME_Topology%,_tt_avs.Topology
+;AddInterface=%KSCATEGORY_TOPOLOGY%,%KSNAME_Topology%,_tt_avs.Topology
+
+
+
+;=============================================================================
+;	make the driver available for the Multimedia system
+;=============================================================================
+[_tt_avs.AddReg]
+HKR,,AssociatedFilters,,"wdmaud,swmidi,redbook"
+HKR,,Driver,,TTAuFWav.sys
+HKR,Drivers,SubClasses,,"wave,midi,mixer,aux"
+
+HKR,Drivers\wave\wdmaud.drv,Driver,,wdmaud.drv
+HKR,Drivers\midi\wdmaud.drv,Driver,,wdmaud.drv
+HKR,Drivers\mixer\wdmaud.drv,Driver,,wdmaud.drv
+HKR,Drivers\aux\wdmaud.drv,Driver,,wdmaud.drv
+
+HKR,Drivers\wave\wdmaud.drv,Description,,%S_Device_Description%
+HKR,Drivers\midi\wdmaud.drv,Description,,%S_Device_Description%
+HKR,Drivers\mixer\wdmaud.drv,Description,,%S_Device_Description%
+HKR,Drivers\aux\wdmaud.drv,Description,,%S_Device_Description%
+
+;=============================================================================
+;	Sensaura
+;=============================================================================
+[Audio3D.AddReg]
+HKCR,Audio3D,,0,Audio3DObject
+HKCR,Audio3D\CLSID,,0,%Audio3D_CLSID%
+HKCR,CLSID\%Audio3D_CLSID%,,0,Audio3DObject
+HKCR,CLSID\%Audio3D_CLSID%\InProcServer32,,0,Audio3D.dll
+HKCR,CLSID\%Audio3D_CLSID%\InProcServer32,ThreadingModel,0,Apartment
+
+
+[Sensaura.AddReg]
+; CL_NOTE: Default -> no Sensaura
+;HKR,,UpperFilters,0x00010000,"TTAuFWsa"
+
+[SensauraConfiguration.AddReg]
+HKR,Sensaura\Configuration,ForwardSpeakerConfiguration,0x00010001,1
+HKR,Sensaura\Configuration,IgnoreDSSpeakerConfiguration,0x00010001,1
+HKR,Sensaura\Configuration,RenderFactory,0,"SpdifPcmOut1"
+
+
+;=============================================================================
+;	Strings
+;=============================================================================
+[Strings]
+; non-localizeable
+KSCATEGORY_AUDIO="{6994AD04-93EF-11D0-A3CC-00A0C9223196}"
+KSCATEGORY_RENDER="{65E8773E-8F56-11D0-A3B9-00A0C9223196}"
+KSCATEGORY_CAPTURE="{65E8773D-8F56-11D0-A3B9-00A0C9223196}"
+KSCATEGORY_TOPOLOGY="{DDA54A40-1E4C-11D1-A050-405705C10000}"
+Proxy.CLSID="{17CCA71B-ECD7-11D0-B908-00A0C9223196}"
+KSSTRING_Filter="{9B365890-165F-11D0-A195-0020AFD156E4}"
+KSNAME_Topology="Topology"
+
+; Sensaura
+Audio3D_CLSID      ="{D8F1EEE0-F634-11CF-8700-00A0245D918B}"
+
+
+;localizeable
+S_Provider="TerraTec"
+S_DriverName="TTAuFWav"
+S_DiskName="TerraTec 1394 Audio Driver Disk"
+S_tt_avs_audio_device="Aureon 7.1 FW Audio Device"
+S_Device_Description="TerraTec 1394 Audio Driver"
+S_TopologyDeviceName="Aureon 7.1 FW Mixer"
+
+
+

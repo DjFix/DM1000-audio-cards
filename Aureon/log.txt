@@ -1,0 +1,203 @@
+DM1000 Bootloader XI40
+-----------------
+Starting without 1394
+GUID:  000aac02'00455938
+HWID:  00000002
+HWVS:  00000001
+BLDS:  00000000
+
+Bootloader: CRC ok! Id=00000001, V=00002809, 20040719-074807UT
+Debugger:   invalid
+Image:      CRC ok! Id=00000002, V=03020d1f, 20041105-165722UT
+CnE:        CRC ok! Id=00000002, V=03020d1f, 20041105-165722UT
+
+Press Ctrl-A to avoid starting image!
+
+
+Start image!
+
+Addr=20080000. Ready ... 
+GO!
+
+
+SystemDeviceManager: This device is the new standard default io device
+
+mod: SysDevUart2
+
+mod: shellModule
+
+mod: stack1394NoBusReset
+
+mod: bldCommand
+
+mod: modCMP
+
+mod: Services1394
+
+mod: AVCStack
+
+mod: AVCConnectionMgnt
+
+mod: avDriver
+
+mod: AvdCommands
+
+mod: streamingDriver
+
+mod: StreamingFrmWrk
+
+mod: DataStreamManagement
+
+mod: StreamingFramer61883
+
+mod: modBmCommand
+
+mod: modOsCommand
+
+mod: Application
+IRParser_NEC_TT::IRParser_NEC_TT()
+IRParser_NEC_TT::initialize()
+IR Midi created!
+IR Midi added to audio service!
+------------------------------------------------------------
+LibraryVersion:      Terratec Aureon App (Release)
+LibraryBuildVersion: 50466079 (2004-11-05)
+LibraryCVSTag:       terratec_aureon_20041105
+------------------------------------------------------------
+
+************************************************************
+* Clock Synch Source for domain 1 set to '       Internal' *
+************************************************************
+AppControl_Aureon::installUiHandlers()
+AppControl_Aureon::setStartupLEDs()
+Aureon Power Switch == OFF => Power LED == OFF
+
+####### Current StreamFormat Info ###########
+-> Plug 'PCR Compound Input' Supported Stream Formats:
+   No of stream channels = 10, No of used channels = 10
+   ===== Current Stream Format =====
+   -> Current StreamFormatStatus = inactive
+   -> Current StreamFormatFrequency = 48 kHz
+   -> AM824 Compound: RateCtrl=NOT supported
+   -> Cluster 'MultiChannel': Format=0x6, NoOfStreamChannels=8, PortType=0x3
+      -> Channel 'MultiChannel Front left': position = 2
+      -> Channel 'MultiChannel Front right': position = 7
+      -> Channel 'MultiChannel Rear left': position = 3
+      -> Channel 'MultiChannel Rear right': position = 8
+      -> Channel 'MultiChannel Center': position = 4
+      -> Channel 'MultiChannel Subwoofer': position = 9
+      -> Channel 'MultiChannel Surround left': position = 5
+      -> Channel 'MultiChannel Surround right': position = 10
+   -> Cluster 'SPDIF/AC3_Out': Format=0x0, NoOfStreamChannels=2, PortType=0x4
+      -> Channel 'SPDIF/AC3_Out left': position = 1
+      -> Channel 'SPDIF/AC3_Out right': position = 6
+   =================================
+   -> Sampling Frequencies:
+     -> StreamFormatFrequency = 32 kHz
+     -> StreamFormatFrequency = 44.1 kHz
+     -> StreamFormatFrequency = 48 kHz
+     -> StreamFormatFrequency = 88.2 kHz
+     -> StreamFormatFrequency = 96 kHz
+     -> StreamFormatFrequency = 192 kHz
+  ----------------------------------
+-> Plug 'MSU Wave Input 1/2 ' Supported Stream Formats:
+   No of stream channels = 3, No of used channels = 3
+   ===== Current Stream Format =====
+   -> Current StreamFormatStatus = inactive
+   -> Current StreamFormatFrequency = 48 kHz
+   -> AM824 Compound: RateCtrl=NOT supported
+   -> Cluster 'Aureon FW Record': Format=0x6, NoOfStreamChannels=2, PortType=0x4
+      -> Channel 'Aureon FW Rec L': position = 1
+      -> Channel 'Aureon FW Rec R': position = 2
+   -> Cluster 'MidiSection.0': Format=0xd, NoOfStreamChannels=1, PortType=0xa
+      -> Channel 'MidiPort_1': position = 3
+   =================================
+   -> Sampling Frequencies:
+     -> StreamFormatFrequency = 32 kHz
+     -> StreamFormatFrequency = 44.1 kHz
+     -> StreamFormatFrequency = 48 kHz
+     -> StreamFormatFrequency = 88.2 kHz
+     -> StreamFormatFrequency = 96 kHz
+     -> StreamFormatFrequency = 192 kHz
+  ----------------------------------
+-> Plug 'MSU Synch Output' Supported Stream Formats:
+   No of stream channels = 2, No of used channels = 2
+   ===== Current Stream Format =====
+   -> Current StreamFormatStatus = inactive
+   -> Current StreamFormatFrequency = 48 kHz
+   -> AM824: Format=0x40, NoOfStreamChannels=2, RateCtrl=NOT supported                 
+      -> Channel 'SynchChannel1': position = 1                                         
+      -> Channel 'SynchChannel2': position = 2                                         
+   =================================                                                   
+   -> Sampling Frequencies:                                                            
+     -> StreamFormatFrequency = 32 kHz
+     -> StreamFormatFrequency = 44.1 kHz
+     -> StreamFormatFrequency = 48 kHz
+     -> StreamFormatFrequency = 88.2 kHz
+     -> StreamFormatFrequency = 96 kHz
+     -> StreamFormatFrequency = 192 kHz
+  ----------------------------------
+#############################################
+************************************************************
+* Clock Synch Source for domain 1 set to '       Internal' *
+************************************************************
+Initializing Recorder process: OutputChannel=16, FDF=2...
+Initializing Playback process: InputChannel=15, FDF=2...
+Starting Playback process...
+Starting Recorder process...
+PlaybackProcessor_Aureon process is running...
+Using serialized printf
+System initialisation done.
+
+PlaybackProcessor_Aureon::doAudioProcessing: Without 1394 Input!!
+RecorderProcessor_Aureon::doAudioProcessing: 2 Channel Without 1394 Output!!
+
+CMDLINE tool ready for commands. Try "help" for help.
+/cfg>hello KIT...
+        hello Michael...
+hello KIT...
+        hello Michael...
+hello 
+Unknown command
+/cfg>hello KIT...
+        hello Michael...
+hello KIT...
+        hello Michael...
+hello KIT...
+        hello Michael...
+hello KIT...
+        hello Michael...
+hello KIT...
+        hello Michael...
+hello KIT...
+        hello Michael...
+hello KIT...                                                                           
+        hello Michael...                                                               
+hello KIT...                                                                           
+        hello Michael...                                                               
+hello KIT...                                                                           
+        hello Michael...                                                               
+hello KIT...                                                                           
+        hello Michael...
+hello KIT...
+        hello Michael...
+hello KIT...
+        hello Michael...
+hello KIT...
+        hello Michael...
+hello KIT...
+        hello Michael...
+hello KIT...
+        hello Michael...
+hello KIT...
+        hello Michael...
+hello KIT...
+        hello Michael...
+hello KIT...
+        hello Michael...
+hello KIT...
+        hello Michael...
+hello KIT...
+        hello Michael...
+hello KIT...
+        hello Michael...

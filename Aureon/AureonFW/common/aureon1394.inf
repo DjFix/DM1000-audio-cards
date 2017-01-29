@@ -1,0 +1,233 @@
+;$$$DICoInst$$$  ; This tag is needed to trigger the device class co-installer.
+;/*=============================================================================
+;   FILE:         aureon1394.inf
+;-------------------------------------------------------------------------------
+;   DESCRIPTION:  Device setup information file for 
+;         - Aureon 7.1 FireWire
+;
+;   PLATFORMS:
+;		  - Windows XP
+;         - Windows XP x64 Edition
+;		  - Windows Vista
+;
+;   History:
+;   21-Nov-2003 (C.L.) - Initial version
+;	14-Jul-2006 (C.L.) - Migration to Win64
+;	26-Feb-2007 (C.L.) - Migration to Windows Vista
+;
+;-------------------------------------------------------------------------------
+;   COPYRIGHT:    (c) 2004-2007  TerraTec Electronic GmbH. All Rights Reserved.
+;                 (c) 2004-2007  Thesycon GmbH / BridgeCo AG
+;=============================================================================*/
+
+
+;=============================================================================
+; Version Section
+;=============================================================================
+[Version]
+Signature="$Windows NT$"
+Class=61883
+ClassGUID={7ebefbc0-3200-11d2-b4c2-00a0C9697d07}
+Provider=%S_Provider%
+DriverVer=07/05/2007,2.44.0.0
+CatalogFile = aureon1394.cat
+
+
+
+;=============================================================================
+;	Manufacturer
+;=============================================================================
+[Manufacturer]
+%S_Mfg%=TerraTec, ntamd64
+
+
+;=============================================================================
+;	Device section
+;=============================================================================
+[TerraTec]
+%S_DeviceDesc_Aureon%=_InstallAureon, 1394\TerraTec_Electronic_GmbH&AUREON_7.1_FireWire
+%S_DeviceDesc_Bootloader%=_InstallAureon, 1394\TerraTec_Electronic_GmbH&AUREON_7.1_FireWire_Bootloader
+
+[TerraTec.ntamd64]
+%S_DeviceDesc_Aureon%=_InstallAureon, 1394\TerraTec_Electronic_GmbH&AUREON_7.1_FireWire
+%S_DeviceDesc_Bootloader%=_InstallAureon, 1394\TerraTec_Electronic_GmbH&AUREON_7.1_FireWire_Bootloader
+
+;=============================================================================
+;	Aureon Install Sections x86-based systems
+;=============================================================================
+[_InstallAureon.NTx86]
+CopyFiles=_CopyFiles_sys
+
+[_InstallAureon.NTx86.Services]
+AddService = %S_DriverName%, 0x00000002, _NT_AddService, _NT_EventLog
+
+[_InstallAureon.NTx86.HW]
+AddReg=_AddReg_ChildDev, _AddReg_Cfg_Aureon
+
+;=============================================================================
+;	Aureon Install Sections x64-based systems
+;=============================================================================
+
+[_InstallAureon.ntamd64]
+CopyFiles=_CopyFiles_sys_x64
+
+[_InstallAureon.ntamd64.Services]
+AddService = %S_DriverName%, 0x00000002, _NT_AddService, _NT_EventLog
+  
+[_InstallAureon.ntamd64.HW]
+AddReg=_AddReg_ChildDev, _AddReg_Cfg_Aureon
+
+
+;=============================================================================
+;	NT Service sections x86 & x64
+;=============================================================================
+[_NT_AddService]
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 3                  ; SERVICE_DEMAND_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %10%\System32\Drivers\%S_DriverName%.sys
+AddReg=_AddReg_DevInterfaces, _AddReg_ConfigDB
+
+[_NT_EventLog]
+AddReg=_NT_EventLog_AddReg
+
+[_NT_EventLog_AddReg]
+HKR,,EventMessageFile,0x00020000,"%%SystemRoot%%\System32\IoLogMsg.dll;%%SystemRoot%%\System32\drivers\%S_DriverName%.sys"
+HKR,,TypesSupported,  0x00010001,7
+
+
+
+;=============================================================================
+; device interface identifiers
+;=============================================================================
+[_AddReg_DevInterfaces]
+HKR, , VendorSpecificInterfaceGuid,%REG_SZ%,"{B0A71EDF-ADE1-4149-A0CB-154FBC5BE26E}"
+
+;; Activate the following line to disable the default device interface exported by the driver
+;; The default interface is identified by BCO_IID.
+HKR, , RegisterDefaultDeviceInterface,  %REG_DWORD%, 0 
+
+
+;=============================================================================
+; child device identifier, identifies the WDM audio driver instance
+;=============================================================================
+[_AddReg_ChildDev]
+HKR, , ChildDeviceEnumerator,   %REG_SZ%,  "TT1394_ENUM"
+HKR, , ChildDeviceId,           %REG_SZ%,  "TT1394_AVS_000AAC0200"
+HKR, , ChildDeviceDescription,  %REG_SZ%,  "TerraTec WDM Audio Device"
+
+
+
+;=============================================================================
+; Device specific static settings
+;=============================================================================
+[_AddReg_Cfg_Aureon]
+HKR, "Out&MultiChannel&01\MasterVolume",  "ASU_ID",  %REG_DWORD%, 0
+HKR, "Out&MultiChannel&01\MasterVolume",  "FB_ID",   %REG_DWORD%, 1
+HKR, "Out&MultiChannel&01\MasterMute",    "ASU_ID",  %REG_DWORD%, 0
+HKR, "Out&MultiChannel&01\MasterMute",    "FB_ID",   %REG_DWORD%, 1
+
+
+HKR, "In&Aureon&00", SoundDeviceName,  %REG_SZ%,  "Aureon 7.1 FireWire In"
+HKR, "Out&SPDIF/AC3&00", SoundDeviceName,  %REG_SZ%,  "Aureon 7.1 FireWire Out"
+HKR, "Out&Multichannel&01", SoundDeviceName,  %REG_SZ%,  "Aureon 7.1 FireWire Out"
+HKR, "In&MidiPort_1&02", SoundDeviceName,  %REG_SZ%,  "Aureon 7.1 FW Midi Remote"
+
+
+;=============================================================================
+; Static settings in ConfigDB
+;=============================================================================
+[_AddReg_ConfigDB]
+
+;; default size of isochronous stream buffers, in microseconds
+HKR, "ConfigDB\Settings", "IsoStreamBufferDepth[us]", %REG_DWORD%, 2000
+
+;; default size of ASIO buffers, in microseconds
+HKR, "ConfigDB\Settings", "AsioBufferDepth[us]", %REG_DWORD%, 6000
+
+;; default size of WDM/KS buffers, in microseconds
+HKR, "ConfigDB\Settings", "KsBufferDepth[us]", %REG_DWORD%, 10000
+
+HKR, "ConfigDB\Settings", "DelayOnStartDevice[ms]", %REG_DWORD%, 10
+
+;; default Samplerate
+HKR, "ConfigDB\Settings", "SampleRate[Hz]", %REG_DWORD%, 48000
+
+;; enable/disable GSIF support
+HKR, "ConfigDB\Settings", "EnableGsifSupport", %REG_DWORD%, 1
+
+;; default domain synch mode:
+HKR, "ConfigDB\Settings", "DomainSynchMode",            %REG_DWORD%, 1
+
+;; default sample rate selection mode:
+HKR, "ConfigDB\Settings", "SampleRateSelectionMode",    %REG_DWORD%, 0
+
+;; default sampling rate, supported rates are: 44100, 48000, 88200, 96000 
+HKR, "ConfigDB\Settings", "SampleRate[Hz]",             %REG_DWORD%, 44100
+
+
+
+;=============================================================================
+; Copy file sections
+;=============================================================================
+[_CopyFiles_sys]
+TTAuFW1394.sys
+
+
+[_CopyFiles_sys_x64]
+TTAuFW1394.sys,TTAuFW1394_x64.sys,
+
+
+;=============================================================================
+; Destination Directories
+;=============================================================================
+[DestinationDirs]
+DefaultDestDir =     12   ; %windir%\system32\drivers 
+_CopyFiles_sys =     12
+_CopyFiles_sys_x64 = 12
+
+
+;=============================================================================
+; Disk Layout
+;=============================================================================
+[SourceDisksNames]
+1=%S_DiskName%,,
+
+[SourceDisksFiles]
+TTAuFW1394.sys=1
+TTAuFW1394_x64.sys=1
+
+;=============================================================================
+; Text Strings
+;=============================================================================
+[Strings]
+
+;
+; Non-Localizable Strings
+;
+REG_SZ         = 0x00000000
+REG_MULTI_SZ   = 0x00010000
+REG_EXPAND_SZ  = 0x00020000
+REG_BINARY     = 0x00000001
+REG_DWORD      = 0x00010001
+
+
+;
+; Localizable Strings
+;
+S_Provider="TerraTec"
+S_Mfg="TerraTec"
+
+
+; device description
+S_DeviceDesc_Aureon="Aureon 7.1 FireWire"
+S_DeviceDesc_Bootloader="Aureon 7.1 FW Bootloader"
+
+; disk name
+S_DiskName="TerraTec Driver Disk"
+
+; file name of driver executable (without extension) 
+S_DriverName="TTAuFW1394"
+
+
+

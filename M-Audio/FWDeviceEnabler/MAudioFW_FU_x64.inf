@@ -1,0 +1,85 @@
+;----------------------------------------------------------------------
+; M-Audio Venom Firmware Updater (64-bit)
+; Copyright (c) 2009 M-Audio / Avid Technology, Inc.
+;----------------------------------------------------------------------
+
+;==============================================================================
+[Version]
+Signature="$WINDOWS NT$"
+Class=MEDIA
+ClassGUID={4d36e96c-e325-11ce-bfc1-08002be10318}
+provider=%Mfg_Name%
+CatalogFile=MAudioFW_FU_x64.cat
+DriverVer =03/03/2008,5.10.00.5058
+
+;------------------------------------------------------------------------------
+; Contents
+;------------------------------------------------------------------------------
+[SourceDisksNames]
+1=%Disk_Name%,,,
+
+[SourceDisksFiles]
+mafw.sys=1
+
+[DestinationDirs]
+MAFWFU.CopyList=12
+
+[MAFWFU.CopyList]
+mafw.sys
+
+;------------------------------------------------------------------------------
+; Manufacturer and Models
+;------------------------------------------------------------------------------
+[Manufacturer]
+%Mfg_Name%=MAFWFU,NTAMD64
+
+;------------------------------------------------------------------------------
+; 64-bit Model Section
+;------------------------------------------------------------------------------
+[MAFWFU.NTAMD64]
+%MAFWFU_DeviceDesc% = MAFWFU_Install,V1394\M_AUDIO_FIRMWARE_UPDATER
+
+[MAFWFU_Install.NTAMD64]
+Include=ks.inf,wdmaudio.inf
+Needs=KS.Registration,WDMAUDIO.Registration
+CopyFiles=MAFWFU.CopyList
+AddReg=MAFWFU.AddReg
+
+[MAFWFU_Install.NTAMD64.Services]
+AddService = MAFW, 0x00000002, MAFW_Service_Inst
+
+;------------------------------------------------------------------------------
+; Common
+;------------------------------------------------------------------------------
+[MAFWFU.AddReg]
+HKR,,AssociatedFilters,,"wdmaud,swmidi,redbook"
+HKR,,Driver,,mafw.sys
+HKR,,NTMPDriver,,"mafw.sys,sbemul.sys"
+
+HKR,Drivers,SubClasses,,"wave,midi,mixer"
+
+HKR,Drivers\wave\wdmaud.drv,Driver,,wdmaud.drv
+HKR,Drivers\midi\wdmaud.drv,Driver,,wdmaud.drv
+HKR,Drivers\mixer\wdmaud.drv,Driver,,wdmaud.drv
+
+HKR,Drivers\wave\wdmaud.drv,Description,,%MAFW.DeviceDesc%
+HKR,Drivers\midi\wdmaud.drv, Description,,%MAFW.DeviceDesc%
+HKR,Drivers\mixer\wdmaud.drv,Description,,%MAFW.DeviceDesc%
+
+;------------------------------------------------------------------------------
+[MAFW_Service_Inst]
+DisplayName   = %MAFWFU_SvcDesc%
+ServiceType   = 1                  ; SERVICE_KERNEL_DRIVER
+StartType     = 3                  ; SERVICE_DEMAND_START
+ErrorControl  = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary = %12%\mafw.sys
+
+;------------------------------------------------------------------------------
+[Strings]
+;------------------------------------------------------------------------------
+Mfg_Name            ="M-Audio"
+Disk_Name           = "M-Audio FireWire Firmware Updater Driver Disk"
+
+MAFWFU_DeviceDesc 	="M-Audio Firmware Updater"
+MAFWFU_SvcDesc		="Service for M-Audio FireWire"
+
