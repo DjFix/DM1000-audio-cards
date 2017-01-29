@@ -8,6 +8,8 @@ This repository contains Firmware, docs, Windows and Mac drivers for DM1000-base
 
 ![Terratec Aureon 7.1 FireWire](https://github.com/romansavrulin/DM1000-audio-cards/raw/master/Aureon/Images/Aureon7.1FireWire_Side_s.jpg)
 
+![Terratec Aureon 7.1 FireWire main PCB](https://github.com/romansavrulin/DM1000-audio-cards/raw/master/Aureon/IMG_4793.jpg)
+
 #Resolving boot or invalid firmware issue of soundcard
 If your card lights all LEDs and doesn't respond to any button, Firewire link connection or any other actions, you should check what's going on with system firmware inside your card. Just connect UART to the following header inside and open your favorite terminal with `11520 8n1` speed settings.
 
